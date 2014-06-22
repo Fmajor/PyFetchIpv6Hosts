@@ -12,6 +12,7 @@ use just-ping.com and ping6 to get available ipv6 hosts file to climb the Great 
 注意
 ----------------
 使用just-ping获取敏感网站的ip同样会被链接重置，所以我的程序是在vpn环境下跑的，也许你会问有了vpn还要毛v6,答案是
+
 		1.v6快
 		2.造福没有vpn的人
 
