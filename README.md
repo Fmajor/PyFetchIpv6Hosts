@@ -16,4 +16,4 @@ use just-ping.com and ping6 to get available ipv6 hosts file to climb the Great 
 		1.v6快
 		2.造福没有vpn的人
 
-### 这是大四毕业狗在收拾宿舍的间隙写的....详细的doc就不写了，有问题邮件交流，但估计也得毕业季过了才有空回吧
+### 这是大四毕业狗在收拾宿舍的间隙写的....程序应该还有不少bug，详细的doc就不写了。有问题邮件交流，但估计也得毕业季过了才有空回吧
