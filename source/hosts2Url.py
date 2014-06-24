@@ -13,3 +13,6 @@ with open(urlFilePath,'r') as f:
 	eachLines=[eachLine.split('#')[0].rstrip().split('/')[0] for eachLine in f if len(eachLine.split('#')[0].rstrip())>0]
 
 urls = [each.split()[1] for each in eachLines]
+
+
+
