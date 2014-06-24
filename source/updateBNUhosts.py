@@ -14,5 +14,7 @@ with open(urlFilePath,'r') as f:
 
 urls = [each.split()[1] for each in eachLines]
 
+hostsHeaderNum = 9
+urls = urls[9:]
 
 
