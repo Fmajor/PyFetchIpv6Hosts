@@ -17,23 +17,26 @@ import re,requests,json,os,pickle,time,sys,commands
 import pdb 
 import threading
 
-proxies = {
-	  "http": "http://127.0.0.1:8888",
-}
+#proxies = {
+#	  "http": "http://127.0.0.1:8888",
+#}
 
 if len(sys.argv)==3:
 	tNum = int(sys.argv[2])
 	urlFileName=sys.argv[1]
+	urlFilePath = 'urlFiles/' + urlFileName
 	print 'urlFileName is ',urlFileName
 
 if len(sys.argv)==2:
 	tNum = 1
 	urlFileName=sys.argv[1]
+	urlFilePath = 'urlFiles/' + urlFileName
 	print 'urlFileName is ',urlFileName
 
 if len(sys.argv)==1:
 	tNum = 1
 	urlFileName = 'url.txt'
+	urlFilePath = 'urlFiles/' + urlFileName
 	print 'urlFileName is ',urlFileName
 											     
 cacheFileName = 'data/'+urlFileName+'.cache.dat'
@@ -195,12 +198,65 @@ def div_list(ls,n):
 		j = ls_len/n
 		k = ls_len%n
 		ls_return = []
-		for i in xrange(0,(n-1)*j,j):
+		for i in xrange(0,n*j,j):
 			ls_return.append(ls[i:i+j])
-		ls_return.append(ls[(n-1)*j:])
+		for i in xrange(k):
+			ls_return[i].append(ls[n*j+i])
+
 		return ls_return
 
-def main(tNumbers):
+def getHostsViaJustPing(tNumbers,updateAll=0):
+	global eachN
+	if not os.path.exists('data'):
+		os.mkdir('data')
+
+	finishedURL = os.listdir('data/eachURLdata')
+	finishedURL = [each[:-4] for each in finishedURL]
+
+	urlFile = open(urlFilePath,'r')
+	urlList = [eachLine.split('#')[0].rstrip().split('/')[0] for eachLine in urlFile if len(eachLine.split('#')[0].rstrip())>0]
+	if not updateAll:
+		urlTodo = [var for var in urlList if var not in finishedURL]
+	else:
+		urlTodo = urlList
+	
+	totalN = len(urlTodo)
+	if totalN<tNumbers:
+		raise ValueError,"to much threads.......more than task"
+	print totalN, "URLs to get....."
+	if totalN==0:
+		print 'NO URL to GET!   exit'
+		return
+	print tNumbers, "threads to do"
+	allURLlist = div_list(urlTodo,tNumbers)
+	eachN = len(allURLlist[-1])
+	print 'each length is ',eachN
+
+	allURLcache = []
+	allMutex = []
+	allFinishFlag = []
+	allFinished = []
+	allPingCount = []
+	for i in range(tNumbers):
+		allURLcache.append([[],[]])
+		allMutex.append(threading.Lock())
+		allFinishFlag.append([False])
+		allFinished.append([[],[]])
+		allPingCount.append([0])
+	allGetipTreads = []
+	for i in range(tNumbers):
+		allGetipTreads.append(threading.Thread(target=getIpv6Address,
+		                     args=(allURLlist[i],allURLcache[i],allMutex[i],allFinishFlag[i],i+1)))
+
+	for t in allGetipTreads:
+		time.sleep(1)
+		t.start()
+	
+	for t in allGetipTreads:
+		t.join()
+
+
+def ping6FromFile(tNumbers, updateAll=0):
 	global eachN
 	if not os.path.exists('data'):
 		os.mkdir('data')
@@ -216,7 +272,90 @@ def main(tNumbers):
 		finished = [[],[]]
 		finishedURL = []
 
-	urlFile = open(urlFileName,'r')
+	urlFile = open(urlFilePath,'r')
+	urlList = [eachLine.split('#')[0].rstrip().split('/')[0] for eachLine in urlFile if len(eachLine.split('#')[0].rstrip())>0]
+	if not updateAll:
+		urlTodo = [var for var in urlList if var not in finishedURL]
+	else:
+		urlTodo = urlList
+	totalN = len(urlTodo)
+	if totalN<tNumbers:
+		raise ValueError,"to much threads.......more than task"
+	print totalN, "URLs to get....."
+	if totalN==0:
+		print 'NO URL to GET!   exit'
+		return
+	print tNumbers, "threads to do"
+	allURLlist = div_list(urlTodo,tNumbers)
+	eachN = len(allURLlist[-1])
+	print 'each length is ',eachN
+	subTnum = 10;
+
+	allURLcache = []
+	allMutex = []
+	allFinishFlag = []
+	allFinished = []
+	allPingCount = []
+	for i in range(tNumbers):
+		allURLcache.append([[],[]])
+		allMutex.append(threading.Lock())
+		allFinishFlag.append([False])
+		allFinished.append([[],[]])
+		allPingCount.append([0])
+	
+
+	allGetipTreads = []
+	allPing6Treads = []
+	for i in range(tNumbers):
+		allGetipTreads.append(threading.Thread(target=getIpv6AddressFromFile,
+		                     args=(allURLlist[i],allURLcache[i],allMutex[i],allFinishFlag[i],i+1)))
+		for j in range(subTnum):
+			allPing6Treads.append(threading.Thread(target=usePing6,
+		    	                 args=(allURLcache[i],allMutex[i],allFinishFlag[i],allFinished[i],i+1,allPingCount[i])))
+
+	for t in allGetipTreads:
+		t.start()
+	for t in allPing6Treads:
+		time.sleep(0.1)
+		t.start()
+	for t in allPing6Treads:
+		t.join()
+	
+	for eachFinishedList in allFinished:
+		finished[0].extend(eachFinishedList[0])
+		finished[1].extend(eachFinishedList[1])
+
+	with open(cacheFileName,'w') as f:
+		pickle.dump(finished,f)
+	
+	noIpUrl = [finished[0][i] for i in range(len(finished[0])) if len(finished[1][i])==0]
+	notIncUrl = [eachUrl for eachUrl in urlList if eachUrl not in finished[0] ]
+
+	stillTodoUrl = noIpUrl
+	stillTodoUrl.extend(notIncUrl)
+
+	with open(urlFilePath+'.stilltodo','w') as f:
+		for eachUrl in stillTodoUrl:
+			f.write(eachUrl+'\n')
+
+
+def getHostsViaJustPingAndping6It(tNumbers):
+	global eachN
+	if not os.path.exists('data'):
+		os.mkdir('data')
+
+	if os.path.exists(cacheFileName) and os.path.getsize(cacheFileName)>0:
+		f = open(cacheFileName,'r')
+		finished = pickle.load(f)
+		f.close()
+		finishedURL = [finished[0][i] for i in range(len(finished[0])) if len(finished[1][i])>0]
+		#finishedURL = [finished[0][i] for i in range(len(finished[0]))]
+		print 'load %d finished URL from ' % (len(finishedURL)) +  cacheFileName
+	else:
+		finished = [[],[]]
+		finishedURL = []
+
+	urlFile = open(urlFilePath,'r')
 	urlList = [eachLine.split('#')[0].rstrip().split('/')[0] for eachLine in urlFile if len(eachLine.split('#')[0].rstrip())>0]
 	urlTodo = [var for var in urlList if var not in finishedURL]
 	totalN = len(urlTodo)
@@ -230,7 +369,7 @@ def main(tNumbers):
 	allURLlist = div_list(urlTodo,tNumbers)
 	eachN = len(allURLlist[0])
 	print 'each length is ',eachN
-	subTnum = 3;
+	subTnum = 10;
 
 	allURLcache = []
 	allMutex = []
@@ -276,19 +415,19 @@ def main(tNumbers):
 	stillTodoUrl = noIpUrl
 	stillTodoUrl.extend(notIncUrl)
 
-	with open(urlFileName+'.stilltodo','w') as f:
+	with open(urlFilePath+'.stilltodo','w') as f:
 		for eachUrl in stillTodoUrl:
 			f.write(eachUrl+'\n')
 
 	if anyError:
 		print "have ERROR!"
 
-def tryTogetIpv6AddressFromFile(urlTodo, URLcache, mutex, finishFlag,tNum):
+def getIpv6AddressFromFile(urlTodo, URLcache, mutex, finishFlag,tNum):
 	getV6N = 0
 	eachUrlDataPath = 'data/eachURLdata/'
 	for eachUrl in urlTodo:
 		eachFileName = eachUrlDataPath+eachUrl+'.dat'
-		if os.path.exist(eachFileName):
+		if os.path.exists(eachFileName):
 			with open(eachFileName,'r') as f:
 				eachIPgot = pickle.load(f)[eachUrl]
 
@@ -305,6 +444,7 @@ def tryTogetIpv6AddressFromFile(urlTodo, URLcache, mutex, finishFlag,tNum):
 			getV6N += 1
 		
 		print '\t'*4,'getV6',getV6N,'/',eachN,' in tread ',tNum
+	finishFlag[0] = True
 
 def getIpv6Address(urlTodo, URLcache, mutex, finishFlag,tNum):
 	brower = justPing()
@@ -368,7 +508,9 @@ def usePing6(URLcache, mutex, finishFlag, finished, tNum, pingCount):
 
 
 
-main(tNum)
+ping6FromFile(50,updateAll=1)
+#getHostsViaJustPing(20,updateAll=1)
+#getHostsViaJustPingAndping6It(tNum)
 #task1 = justPing()
 #result = task1.ping6('facebook.com')
 

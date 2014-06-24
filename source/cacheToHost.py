@@ -22,7 +22,7 @@ toWriteList[1]=[finished[1][i] for i in range(N) if len(finished[1][i])>0]
 
 def list2host(oneList):
 	tN = len(oneList[0])
-	with open('myhostOf%s'%(urlFileName),'w') as f:
+	with open('generatedHosts/'+'myhostOf%s'%(urlFileName),'w') as f:
 		for i in range(tN):
 			f.write(toWriteList[1][i] + '\t\t\t'  + toWriteList[0][i] + '\n')	
 
