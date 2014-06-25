@@ -60,6 +60,7 @@ if urlFileName == 'all':
 	filePath = '../hosts.bnu'
 	(status, output) = commands.getstatusoutput('cp '+filePath+' backups/')
 	list2host(toWriteList,filePath)
+	print 'update all ok'
 
 else:
 	cacheFileName = 'data/'+urlFileName+'.cache.dat'
