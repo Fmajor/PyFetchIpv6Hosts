@@ -21,27 +21,6 @@ import threading
 #	  "http": "http://127.0.0.1:8888",
 #}
 
-if len(sys.argv)==3:
-	tNum = int(sys.argv[2])
-	urlFileName=sys.argv[1]
-	urlFilePath = 'urlFiles/' + urlFileName
-	print 'urlFileName is ',urlFileName
-
-if len(sys.argv)==2:
-	tNum = 1
-	urlFileName=sys.argv[1]
-	urlFilePath = 'urlFiles/' + urlFileName
-	print 'urlFileName is ',urlFileName
-
-if len(sys.argv)==1:
-	tNum = 1
-	urlFileName = 'url.txt'
-	urlFilePath = 'urlFiles/' + urlFileName
-	print 'urlFileName is ',urlFileName
-											     
-cacheFileName = 'data/'+urlFileName+'.cache.dat'
-
-anyError=0
 
 def oneLinePrint(printStr):
 	sys.stdout.write(printStr+"\r")
@@ -506,11 +485,77 @@ def usePing6(URLcache, mutex, finishFlag, finished, tNum, pingCount):
 		finished[1].append(eachIPgot)
 		mutex.release()
 
+import getopt
+
+CONFIG = { 
+	'urlFiles':'url.txt',
+	'tNum':1,
+	'mod':1
+}   
+OPT_CONFIG_MAP = { 
+	'-f':'urlFiles',
+	'-n':'tNum',
+	'-m':'mod'}
+
+def show_usage(fail=True):
+	stream = sys.stderr if fail else sys.stdout
+	msglist = ["Usage: hehehe",
+	"Options:",
+	"  -f urlFile\turlFile to use",
+	"  -n tNum\tthe number of treads",
+	"  -m mod\t 0~3",
+	"        \t 0:just-ping and ping6",
+	"        \t 1:just-ping",
+	"        \t 2:just-ping, update All",
+	"        \t 3:ping6",
+	"        \t 4:ping6, update All",
+	"  -h help\tshow help message"]
+	print >> stream, "\n".join(msglist)
+	if fail:
+		sys.exit(2)
+		return None
 
 
-ping6FromFile(50,updateAll=1)
+optspec=""
+optspec += "".join([("%s:" % key.strip("-")) for key in OPT_CONFIG_MAP])
+
+try:
+	oplist, args = getopt.gnu_getopt(sys.argv[1:], optspec)
+except getopt.GetoptError as go_e:
+	show_usage()
+opdict = dict(oplist)
+CONFIG.update(opdict)
+
+if len(oplist)==0:
+	show_usage(fail=False)
+	sys.exit(0)
+elif "-h" in opdict:  # Exit as early as possible if "-h" is in options.
+	show_usage(fail=False)
+	sys.exit(0)
+
+
+
+tNum = CONFIG['-n']
+urlFileName = CONFIG['-f']
+urlFilePath = 'urlFiles/' + urlFileName
+print 'urlFileName is ',urlFileName
+											     
+cacheFileName = 'data/'+urlFileName+'.cache.dat'
+anyError=0
+
+mode = CONFIG['-m']
+if mode==0:
+	etHostsViaJustPingAndping6It(tNum)
+elif mode==1:
+	getHostsViaJustPing(tNum,updateAll=0)
+elif mode==2:
+	getHostsViaJustPing(tNum,updateAll=1)
+elif mode==3:
+	ping6FromFile(tNum,updateAll=0)
+elif mode==4:
+	ping6FromFile(tNum,updateAll=1)
+
+#ping6FromFile(50,updateAll=1)
 #getHostsViaJustPing(20,updateAll=1)
 #getHostsViaJustPingAndping6It(tNum)
-#task1 = justPing()
-#result = task1.ping6('facebook.com')
 
