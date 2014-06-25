@@ -40,6 +40,7 @@ else:
 	print 'urlFileName is ',urlFileName
 
 if urlFileName == 'all':
+	# add all data/*.dat
 	cacheFileNames = os.listdir('data')
 	cacheFileNames = [each for each in cacheFileNames if each.find('.dat')>0]
 	N = len(cacheFileNames)
@@ -60,6 +61,16 @@ if urlFileName == 'all':
 	filePath = '../hosts.bnu'
 	(status, output) = commands.getstatusoutput('cp '+filePath+' backups/')
 	list2host(toWriteList,filePath)
+	# add hosts data from inputHosts
+	with open(filePath,'a') as f:
+		cacheFileNames = os.listdir('inputHosts')
+		cacheFileNames = [each for each in cacheFileNames if each.split('.')[-1]=='hosts']
+		N = len(cacheFileNames)
+		print N,'inputHost files'
+		for i in range(N):
+			with open('inputHosts/'+cacheFileNames[i],'r') as ff:
+				f.write(ff.read())	
+
 	print 'update all ok'
 
 else:
