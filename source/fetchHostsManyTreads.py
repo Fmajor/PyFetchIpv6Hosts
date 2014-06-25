@@ -504,7 +504,7 @@ def show_usage(fail=True):
 	"Options:",
 	"  -f urlFile\turlFile to use",
 	"  -n tNum\tthe number of treads",
-	"  -m mod\t 0~3",
+	"  -m mod\t 0~4",
 	"        \t 0:just-ping and ping6",
 	"        \t 1:just-ping",
 	"        \t 2:just-ping, update All",
@@ -546,7 +546,7 @@ anyError = 0
 
 mode = CONFIG['-m']
 if mode=='0':
-	print 'etHostsViaJustPingAndping6It(%s)' % tNum
+	print 'getHostsViaJustPingAndping6It(%s)' % tNum
 	time.sleep(9)
 	getHostsViaJustPingAndping6It(tNum)
 elif mode=='1':
