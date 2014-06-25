@@ -1,4 +1,15 @@
 import pickle,sys,os,commands
+import pdb
+
+def sortRows(theList,rowNum):
+	N = len(theList)
+	eachN = len(theList[0])
+	indices = range(eachN)
+	indices.sort(key = theList[rowNum].__getitem__)
+	result=[[] for i in range(N)]
+	for i, sublist in enumerate(theList):
+		result[i] = [sublist[j] for j in indices]
+	return result
 
 def list2host(oneList,filePath):
 	tN = len(oneList[0])
@@ -21,8 +32,6 @@ def processOneFile(cacheFileName):
 
 	return toWriteList
 
-
-
 if len(sys.argv)>1:
 	urlFileName=sys.argv[1]
 	print 'urlFileName is ',urlFileName
@@ -31,14 +40,23 @@ else:
 	print 'urlFileName is ',urlFileName
 
 if urlFileName == 'all':
-	cacheFileNames = os.listdir(data)
+	cacheFileNames = os.listdir('data')
 	cacheFileNames = [each for each in cacheFileNames if each.find('.dat')>0]
 	N = len(cacheFileNames)
-	toWriteList = set([])
+	toWriteDict = {}
 	for i in range(N):
-		toWriteList.update(processOneFile('data/'+cacheFileNames[i]))
-	toWriteList = list(toWriteList)
-	toWriteList.sort()
+		tempLists = processOneFile('data/'+cacheFileNames[i])
+		listNum = len(tempLists[0])
+		for i in range(listNum):
+			toWriteDict.update({tempLists[0][i]:tempLists[1][i]})
+
+	toWirteNum = len(toWriteDict)
+	toWriteList = [[],[]]
+	for eachKey in toWriteDict.keys():
+		toWriteList[0].append(eachKey)
+		toWriteList[1].append(toWriteDict[eachKey])
+
+	toWriteList = sortRows(toWriteList,0)# sort by url
 	filePath = '../hosts.bnu'
 	(status, output) = commands.getstatusoutput('cp '+filePath+' backups/')
 	list2host(toWriteList,filePath)
