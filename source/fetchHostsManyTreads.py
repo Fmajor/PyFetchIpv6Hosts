@@ -258,6 +258,7 @@ def ping6FromFile(tNumbers, updateAll=0):
 	else:
 		urlTodo = urlList
 	totalN = len(urlTodo)
+	pdb.set_trace()
 	if totalN<tNumbers:
 		raise ValueError,"to much threads.......more than task"
 	print totalN, "URLs to get....."
@@ -535,24 +536,34 @@ elif "-h" in opdict:  # Exit as early as possible if "-h" is in options.
 
 
 
-tNum = CONFIG['-n']
+tNum = int(CONFIG['-n'])
 urlFileName = CONFIG['-f']
 urlFilePath = 'urlFiles/' + urlFileName
 print 'urlFileName is ',urlFileName
 											     
 cacheFileName = 'data/'+urlFileName+'.cache.dat'
-anyError=0
+anyError = 0
 
 mode = CONFIG['-m']
-if mode==0:
-	etHostsViaJustPingAndping6It(tNum)
-elif mode==1:
+if mode=='0':
+	print 'etHostsViaJustPingAndping6It(%s)' % tNum
+	time.sleep(9)
+	getHostsViaJustPingAndping6It(tNum)
+elif mode=='1':
+	print 'getHostsViaJustPing(%s,updateAll=0)' % tNum
+	time.sleep(9)
 	getHostsViaJustPing(tNum,updateAll=0)
-elif mode==2:
+elif mode=='2':
+	print 'getHostsViaJustPing(%s,updateAll=1)' % tNum
+	time.sleep(9)
 	getHostsViaJustPing(tNum,updateAll=1)
-elif mode==3:
+elif mode=='3':
+	print 'ping6FromFile(%s,updateAll=0)' % tNum
+	time.sleep(9)
 	ping6FromFile(tNum,updateAll=0)
-elif mode==4:
+elif mode=='4':
+	print 'ping6FromFile(%s,updateAll=1)' % tNum
+	time.sleep(9)
 	ping6FromFile(tNum,updateAll=1)
 
 #ping6FromFile(50,updateAll=1)
