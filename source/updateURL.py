@@ -4,10 +4,12 @@ import pdb
 
 if len(sys.argv)>1:
 	dataName = sys.argv[1]
+	dataPath = 'updateHosts/' + dataName
 else:
 	dataName = 'httpfox.dat'
+	dataPath = 'updateHosts/' + dataName
 
-f = open(dataName,'r')
+f = open(dataPath,'r')
 data = f.read()
 f.close()
 
@@ -19,7 +21,10 @@ if os.path.exists(outName) and os.path.getsize(outName)>0:
 	with open(outName,'r') as f:
 		for eachUrl in f:
 			oldUrlData.append(eachUrl[:-1]) 
+	oldNum = len(oldUrlData)
 	urlSet.update(oldUrlData)
+	newNum = len(urlSet)
+	print (newNum - oldNum),'urls updated'
 
 f = open(outName,'w')
 toWriteList = list(urlSet)
