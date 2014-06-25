@@ -5,9 +5,18 @@ use just-ping.com and ping6 to get available ipv6 hosts file to climb the Great 
 
 使用方法
 ----------------
-		python2.7 fetchHostsManyTreads.py urlFileName numOfTreads
-		urlFileName是需要获取ipv6地址的url们的文件
-		numOfTreads是程序运行的线程数
+		python2.7 fetchHostsManyTreads.py
+		Options:
+		-f urlFileurlFile to use
+		-n tNumthe number of treads
+		-m mod 0~3
+			0:just-ping and ping6
+			1:just-ping
+			2:just-ping, update All
+			3:ping6
+			4:ping6, update All
+			-h helpshow help message
+															 	
 
 注意
 ----------------
