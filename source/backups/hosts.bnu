@@ -639,6 +639,7 @@
 2607:f8b0:4001:c02::8d			project-slingshot-gp.appspot.com
 2607:f8b0:400e:c01::56			promote.orkut.com
 2404:6800:4005:800::100b			qhie5b8u979rnch1q0hqbrmbkn9estf7-a-oz-opensocial.googleusercontent.com
+2607:f8b0:4007:1a::6			r1---sn-a5m7lnek.googlevideo.com
 2607:f8b0:4007:16::6			r1---sn-a5m7lnes.googlevideo.com
 2001:1900:2200:20::c			r1---sn-a8au-naje.googlevideo.com
 2001:4860:4001:10::6			r1---sn-o097znes.googlevideo.com
@@ -667,6 +668,7 @@
 2404:6800:4007:1::f			r10.maa03s09.googlevideo.com
 2404:6800:4008:2::f			r10.tpe05s03.googlevideo.com
 2404:6800:4008:3::f			r10.tpe05s04.googlevideo.com
+2001:4860:4007:5::10			r11---sn-a5m7ln7z.googlevideo.com
 2001:4860:4001:10::10			r11---sn-o097znes.googlevideo.com
 2404:6800:4005:4::10			r11.hkg03s05.c.bigcache.googleapis.com
 2404:6800:4005:4::10			r11.hkg03s05.googlevideo.com
@@ -718,6 +720,7 @@
 2404:6800:4007:1::13			r14.maa03s09.googlevideo.com
 2404:6800:4008:2::13			r14.tpe05s03.googlevideo.com
 2404:6800:4008:3::13			r14.tpe05s04.googlevideo.com
+2001:4860:4007:6::14			r15---sn-a5m7ln76.googlevideo.com
 2001:4860:4001:10::14			r15---sn-o097znes.googlevideo.com
 2404:6800:4005:4::14			r15.hkg03s05.c.bigcache.googleapis.com
 2404:6800:4005:4::14			r15.hkg03s05.googlevideo.com
@@ -811,6 +814,7 @@
 2404:6800:4007:1::19			r20.maa03s09.googlevideo.com
 2404:6800:4008:2::19			r20.tpe05s03.googlevideo.com
 2404:6800:4008:3::19			r20.tpe05s04.googlevideo.com
+2001:4860:4007:4::8			r3---sn-a5m7ln7s.googlevideo.com
 2001:1900:2200:20::e			r3---sn-a8au-naje.googlevideo.com
 2001:4860:4001:10::8			r3---sn-o097znes.googlevideo.com
 2404:6800:4005:4::8			r3.hkg03s05.c.bigcache.googleapis.com
@@ -840,6 +844,7 @@
 2404:6800:4007:1::9			r4.maa03s09.googlevideo.com
 2404:6800:4008:2::9			r4.tpe05s03.googlevideo.com
 2404:6800:4008:3::9			r4.tpe05s04.googlevideo.com
+2001:4860:4007:5::a			r5---sn-a5m7ln7z.googlevideo.com
 2001:1900:2200:20::10			r5---sn-a8au-naje.googlevideo.com
 2001:4860:4001:10::a			r5---sn-o097znes.googlevideo.com
 2404:6800:4005:4::a			r5.hkg03s05.c.bigcache.googleapis.com
@@ -868,6 +873,7 @@
 2404:6800:4007:1::b			r6.maa03s09.googlevideo.com
 2404:6800:4008:2::b			r6.tpe05s03.googlevideo.com
 2404:6800:4008:3::b			r6.tpe05s04.googlevideo.com
+2607:f8b0:4007:16::c			r7---sn-a5m7lnes.googlevideo.com
 2001:1900:2200:20::12			r7---sn-a8au-naje.googlevideo.com
 2001:4860:4001:10::c			r7---sn-o097znes.googlevideo.com
 2404:6800:4005:4::c			r7.hkg03s05.c.bigcache.googleapis.com
@@ -883,6 +889,7 @@
 2404:6800:4008:2::c			r7.tpe05s03.googlevideo.com
 2404:6800:4008:3::c			r7.tpe05s04.googlevideo.com
 2a00:1450:4017:801::100b			r70rmsn4s0rhk6cehcbbcbfbs31pu0va-a-oz-opensocial.googleusercontent.com
+2001:4860:4007:6::d			r8---sn-a5m7ln76.googlevideo.com
 2001:1900:2200:20::13			r8---sn-a8au-naje.googlevideo.com
 2001:4860:4001:10::d			r8---sn-o097znes.googlevideo.com
 2404:6800:4005:4::d			r8.hkg03s05.c.bigcache.googleapis.com
