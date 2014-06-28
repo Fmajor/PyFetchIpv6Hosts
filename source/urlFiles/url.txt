@@ -39,3 +39,4 @@ s.ytimg.com
 scontent-a.xx.fbcdn.net
 scontent-b.xx.fbcdn.net
 www.youtube-nocookie.com
+blogspot.com
