@@ -17,4 +17,6 @@ urls = [each.split()[1] for each in eachLines]
 hostsHeaderNum = 9
 urls = urls[9:]
 
-
+with open('urlFiles/allUrls.txt','w') as f:
+	for eachUrl in urls:
+		f.write(eachUrl+'\n')

@@ -1,3 +1,4 @@
 python2.7 updateURL.py
 python2.7 fetchHostsManyTreads.py -m 0 -n 2 -f url.txt
 python2.7 cacheToHost.py all
+cp ../hosts.bnu ./inputHosts/hosts.bnu
